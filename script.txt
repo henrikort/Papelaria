@@ -1,0 +1,57 @@
+CREATE TABLE Cargos (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(255) UNIQUE NOT NULL,
+    salario DECIMAL(10, 2) NOT NULL,
+    descricao TEXT
+);
+
+CREATE TABLE Funcionarios (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    cpf VARCHAR(14) UNIQUE NOT NULL,
+    email VARCHAR(255),
+    telefone VARCHAR(20),
+    cargo_id INT NOT NULL,
+    FOREIGN KEY (cargo_id) REFERENCES Cargos(id)
+);
+
+
+CREATE TABLE Clientes (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    cpf VARCHAR(14) UNIQUE NOT NULL,
+    email VARCHAR(255),
+    telefone VARCHAR(20),
+    cidade VARCHAR(255) DEFAULT 'Caxias do Sul',
+    estado VARCHAR(2) DEFAULT 'RS'
+);
+
+
+CREATE TABLE Produtos (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    modelo VARCHAR(255) NOT NULL,
+    valor_unitario DECIMAL(10, 2) NOT NULL CHECK (valor_unitario > 0)
+);
+
+
+CREATE TABLE Vendas (
+    id SERIAL PRIMARY KEY,
+    data_hora TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    cliente_id INT NOT NULL,
+    funcionario_id INT NOT NULL,
+    produto_id INT NOT NULL,
+    quantidade INT NOT NULL,
+    valor_unitario DECIMAL(10, 2) NOT NULL CHECK (valor_unitario > 0),
+    valor_total DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (cliente_id) REFERENCES Clientes(id),
+    FOREIGN KEY (funcionario_id) REFERENCES Funcionarios(id),
+    FOREIGN KEY (produto_id) REFERENCES Produtos(id)
+);
+
+
+CREATE INDEX idx_vendas_data_hora ON Vendas(data_hora);
+CREATE INDEX idx_vendas_funcionario ON Vendas(funcionario_id);
+CREATE INDEX idx_vendas_produto ON Vendas(produto_id);
+
+select * from cargos;
